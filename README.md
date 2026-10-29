@@ -1,6 +1,6 @@
 # Wakib | واكِب
 
-**Author / المؤلفة: Aseel** — © 2026 Aseel. All rights reserved. See [LICENSE](LICENSE).
+**Author Aseel** — © 2026 Aseel. All rights reserved. See [LICENSE](LICENSE).
 
 A prototype platform that links graduation projects (capstones) to real industry challenges
 
