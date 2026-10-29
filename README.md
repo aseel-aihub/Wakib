@@ -30,7 +30,6 @@ A prototype platform that links graduation projects (capstones) to real industry
 
 ## Design 
 
-- Brand colors taken from the Wakib logo (dark green + light green)
 - Two themes: **dark** and **light**, switched with the moon/sun button. The choice is saved; the first visit follows the device setting
 
 ## Security 
@@ -54,7 +53,7 @@ python3 -m http.server 8000
 ```
 index.html
 css/style.css
-assets/       — Wakib logo (one version per theme) + favicon
+assets/       — Wakib logo + favicon
 js/
   theme.js    — dark / light theme (loaded first)
   data.js     — demo data (skills, students, companies, challenges, GP1/GP2 stages)
