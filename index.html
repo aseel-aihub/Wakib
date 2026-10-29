@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  Wakib
+  Wakib | واكِب
   Author: Aseel
   (c) 2026 Aseel. All rights reserved.
   Do not copy or reuse this code or idea without written permission.
@@ -25,17 +25,24 @@
     <link rel="stylesheet" href="vendor/fontawesome/css/fontawesome.min.css">
     <link rel="stylesheet" href="vendor/fontawesome/css/solid.min.css">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+
+    <!-- Theme first, so the page opens in the saved theme (dark / light). -->
+    <script src="js/theme.js"></script>
 </head>
 <body>
     <!-- ===== Top bar ===== -->
     <header class="navbar">
         <div class="logo">
-            <i class="fa-solid fa-handshake" aria-hidden="true"></i>
-            <h2>Wa<span>kib</span></h2>
+            <!-- Wakib logo: one version for each theme -->
+            <img class="logo-mark logo-mark-dark" src="assets/logo-mark-dark-theme.png" alt="Wakib logo">
+            <img class="logo-mark logo-mark-light" src="assets/logo-mark-light-theme.png" alt="Wakib logo">
+            <h2>wa<span>kib</span></h2>
             <span class="tag">EdTech</span>
         </div>
 
         <!-- Buttons to switch between the 4 portals (events are added in app.js). -->
+        <div class="nav-right">
         <nav class="view-toggle" aria-label="Portals">
             <button type="button" class="toggle-btn active" id="btnStudentView" data-view="student">
                 <i class="fa-solid fa-user-graduate" aria-hidden="true"></i> Student
@@ -50,6 +57,13 @@
                 <i class="fa-solid fa-chart-line" aria-hidden="true"></i> University / Ministry
             </button>
         </nav>
+
+        <!-- Dark / light theme button -->
+        <button type="button" class="theme-btn" id="btnTheme" aria-label="Switch theme">
+            <i class="fa-solid fa-moon" aria-hidden="true"></i>
+            <i class="fa-solid fa-sun" aria-hidden="true"></i>
+        </button>
+        </div>
     </header>
 
     <main class="main-container">
