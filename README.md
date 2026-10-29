@@ -31,11 +31,7 @@ A short welcome and a 4-step guide walk a first-time visitor through the full fl
 - **Skills gap** — average level of the students who have the skill vs. average level asked by challenges
 
 ## Design 
-
-- Neutral surfaces with the Wakib logo green as the one accent
 - Two themes: **dark** and **light**, switched with the moon/sun button. The choice is saved; the first visit follows the device setting
-- الألوان مأخوذة من شعار واكِب، مع وضعين: داكن وفاتح
-
 ## Security 
 
 - No `innerHTML` with data — all text is added with `textContent` (prevents XSS)
