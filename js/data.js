@@ -36,51 +36,60 @@ const STUDENT_POOL = Object.freeze([
 
 // Fictional companies.
 const COMPANIES = Object.freeze([
-  { id: "c1", name: "Manara Energy",  sector: "Energy & Industrial" },
-  { id: "c2", name: "Etisal Secure",  sector: "Telecom & Cybersecurity" },
-  { id: "c3", name: "Najm Logistics", sector: "SME & Logistics" },
+  { id: "c1", name: "Manara Energy",  sector: "Energy" },
+  { id: "c2", name: "Etisal Secure",  sector: "Cybersecurity" },
+  { id: "c3", name: "Najm Logistics", sector: "Logistics" },
 ]);
 
 // Challenges posted by the companies. "required" = skills + level needed.
 const CHALLENGES = Object.freeze([
   {
     id: "ch1", companyId: "c1",
-    title: "AI-Driven Predictive Maintenance for Pipeline Valves",
-    description: "Develop ML algorithms to predict pipeline valve failure based on IoT sensor data streams.",
+    title: "Predictive maintenance for pipeline valves",
+    description: "Use sensor data and machine learning to predict valve failures before they happen.",
     required: { "Python": 5, "AI / ML": 4, "Data Analysis": 4 },
   },
   {
     id: "ch2", companyId: "c2",
-    title: "Zero-Trust Security Framework for Telecom Infrastructure",
-    description: "Implement a zero-trust policy model for securing edge nodes and cloud servers.",
+    title: "Zero-trust security for edge servers",
+    description: "Design and test a zero-trust access model for edge nodes and cloud servers.",
     required: { "Cyber Security": 5, "Cloud Systems": 4 },
   },
   {
     id: "ch3", companyId: "c3",
-    title: "Smart Logistics Platform for E-Commerce SMEs",
-    description: "Build an intuitive dashboard connecting small merchants to local courier fleets.",
+    title: "Delivery dashboard for small merchants",
+    description: "Build a simple dashboard that connects small online shops to local couriers.",
     required: { "UI / UX Design": 4, "Python": 3, "Data Analysis": 3, "Project Management": 2 },
   },
 ]);
 
-// Project stages linked to the Saudi capstone courses:
-// GP1 = proposal and design, GP2 = building and testing.
+// Project stages, from the proposal to the final report.
 const MILESTONE_TEMPLATE = Object.freeze([
-  { name: "Problem Definition & Proposal", course: "GP1" },
-  { name: "Requirements & Design",         course: "GP1" },
-  { name: "Development",                   course: "GP2" },
-  { name: "Testing & Evaluation",          course: "GP2" },
-  { name: "Final Report & Presentation",   course: "GP2" },
+  { name: "Proposal" },
+  { name: "Requirements and design" },
+  { name: "Development" },
+  { name: "Testing" },
+  { name: "Final report" },
 ]);
+
+// Fictional applications already sent by other students (solo or as a team).
+const SEED_APPLICATIONS = Object.freeze([
+  { id: "a1", challengeId: "ch1", mode: "team", memberIds: ["s7", "s5"] },
+  { id: "a2", challengeId: "ch1", mode: "solo", memberIds: ["s1"] },
+  { id: "a3", challengeId: "ch2", mode: "solo", memberIds: ["s4"] },
+  { id: "a4", challengeId: "ch2", mode: "team", memberIds: ["s8", "s6"] },
+  { id: "a5", challengeId: "ch3", mode: "team", memberIds: ["s3", "s2", "s5"] },
+  { id: "a6", challengeId: "ch3", mode: "solo", memberIds: ["s6"] },
+]);
+
+function getStudent(id) {
+  return STUDENT_POOL.find(s => s.id === id) || null;
+}
 
 // The only allowed milestone statuses (used to check saved data).
 const MILESTONE_STATUSES = Object.freeze(["Not started", "In progress", "Done"]);
 
-// Small helpers to find a company or a challenge by its id.
+// Small helper to find a company by its id.
 function getCompany(id) {
   return COMPANIES.find(c => c.id === id) || null;
-}
-
-function getChallenge(id) {
-  return CHALLENGES.find(c => c.id === id) || null;
 }

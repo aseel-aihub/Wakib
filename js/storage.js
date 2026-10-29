@@ -9,7 +9,7 @@
 
 "use strict";
 
-const STORAGE_KEY = "wakib_state_v1";
+const STORAGE_KEY = "wakib_state_v2";
 
 // Save data. try/catch because saving can fail (private mode or full storage).
 function saveState(state) {
@@ -38,6 +38,7 @@ function loadState() {
 function clearState() {
   try {
     localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem("wakib_state_v1");
     // old keys from when the project was called BridgeCap
     localStorage.removeItem("bridgecap_state_v2");
     localStorage.removeItem("bridgecap_state_v1");

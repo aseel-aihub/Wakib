@@ -5,48 +5,40 @@
  * Do not copy or reuse this code or idea without written permission.
  *
  * File: match.js
- * The "brain" of the platform: matching score, explanation, team building, skills gap.
+ * The "brain" of the platform: fit score, explanation, team building, skills gap.
  */
 
 "use strict";
 
-// Turn a skills object like {"Python": 4} into a list of numbers in SKILLS order.
-function vectorFor(skillDict) {
-  return SKILLS.map(skill => Number(skillDict[skill]) || 0);
-}
-
-// Cosine similarity = how close two lists of numbers point in the same direction.
-// Result is between 0 (no match) and 1 (perfect match).
-function cosineSimilarity(aDict, bDict) {
-  const a = vectorFor(aDict);
-  const b = vectorFor(bDict);
-  let dot = 0, sizeA = 0, sizeB = 0;
-
-  for (let i = 0; i < a.length; i++) {
-    dot   += a[i] * b[i]; // multiply and add
-    sizeA += a[i] * a[i];
-    sizeB += b[i] * b[i];
-  }
-
-  // If one list is all zeros we can't divide, so the score is 0.
-  if (sizeA === 0 || sizeB === 0) return 0;
-  return dot / (Math.sqrt(sizeA) * Math.sqrt(sizeB));
-}
-
-// Same score but as a percentage (0 - 100) to show on screen.
-function compatibilityScore(studentSkills, challengeRequired) {
-  return Math.round(cosineSimilarity(studentSkills, challengeRequired) * 100);
-}
-
-// Explain the score: which required skills the student has and which are missing.
-function explainMatch(studentSkills, challengeRequired) {
-  const covered = [];
-  const missing = [];
-  Object.keys(challengeRequired).forEach(skill => {
-    if ((Number(studentSkills[skill]) || 0) > 0) covered.push(skill);
-    else missing.push(skill);
+/*
+ * Fit score (0 - 100).
+ * For every required skill we count how much of the needed level the student has.
+ * Example: needs Python 5, student has 4 -> 4 of 5 points.
+ * Having MORE than needed does not add extra points.
+ * fit = points the student covers / all points the challenge needs.
+ */
+function fitScore(studentSkills, required) {
+  let need = 0;
+  let have = 0;
+  Object.entries(required).forEach(([skill, level]) => {
+    need += level;
+    have += Math.min(Number(studentSkills[skill]) || 0, level);
   });
-  return { covered, missing };
+  return need ? Math.round((have / need) * 100) : 0;
+}
+
+/*
+ * Explain the score, skill by skill.
+ * status: "met" (level is enough), "partial" (has it, but lower), "missing" (none).
+ */
+function explainFit(studentSkills, required) {
+  return Object.entries(required).map(([skill, need]) => {
+    const has = Number(studentSkills[skill]) || 0;
+    let status = "missing";
+    if (has >= need) status = "met";
+    else if (has > 0) status = "partial";
+    return { skill, has, need, status };
+  });
 }
 
 /*
@@ -56,13 +48,25 @@ function explainMatch(studentSkills, challengeRequired) {
  *
  * Returns: { team, coveragePct, remaining }
  */
-function formBalancedTeam(required, candidates, teamSize = 4) {
+function formBalancedTeam(required, candidates, teamSize = 4, startMembers = []) {
   // Keep team size safe (between 1 and 10).
   const size = Math.min(Math.max(parseInt(teamSize, 10) || 4, 1), 10);
 
   const remaining = { ...required }; // what is still needed
   const pool = [...candidates];      // copy so we don't change the original
   const team = [];
+
+  // Members already in the team (e.g. the student who builds it) come first.
+  startMembers.forEach(m => {
+    let points = 0;
+    SKILLS.forEach(skill => {
+      const need = remaining[skill] || 0;
+      const has = Number(m.skills[skill]) || 0;
+      points += Math.min(need, has);
+      if (remaining[skill]) remaining[skill] = Math.max(0, need - has);
+    });
+    team.push({ id: m.id, name: m.name, skills: { ...m.skills }, contribution: points });
+  });
 
   while (team.length < size && pool.length > 0) {
     let best = null;
@@ -107,26 +111,42 @@ function formBalancedTeam(required, candidates, teamSize = 4) {
 }
 
 /*
- * Skills gap for the University/Ministry portal.
- * supply = average level of ALL students in this skill.
- * demand = average level asked by the challenges that need this skill.
- * gap = demand - supply (positive = students are behind the market).
+ * Team coverage (0 - 100): the team's levels are added up per skill,
+ * capped at what the challenge needs.
+ */
+function teamCoverage(required, members) {
+  let need = 0;
+  let have = 0;
+  Object.entries(required).forEach(([skill, level]) => {
+    need += level;
+    const sum = members.reduce((t, m) => t + (Number(m.skills[skill]) || 0), 0);
+    have += Math.min(sum, level);
+  });
+  return need ? Math.round((have / need) * 100) : 0;
+}
+
+/*
+ * Skills gap for the University portal.
+ * supply  = average level of the students who HAVE this skill (and how many they are).
+ * demand  = average level asked by the challenges that need this skill.
+ * gap     = demand - supply (positive = students are behind the market).
  */
 function computeSkillsGap(students, challenges) {
   return SKILLS.map(skill => {
-    const supplyList = students.map(s => Number(s.skills[skill]) || 0);
+    const supplyList = students.map(s => Number(s.skills[skill]) || 0).filter(v => v > 0);
     const demandList = challenges.map(c => c.required[skill] || 0).filter(v => v > 0);
 
-    const avgSupply = supplyList.length
-      ? supplyList.reduce((a, b) => a + b, 0) / supplyList.length : 0;
-    const avgDemand = demandList.length
-      ? demandList.reduce((a, b) => a + b, 0) / demandList.length : 0;
+    const avg = list => (list.length ? list.reduce((a, b) => a + b, 0) / list.length : 0);
+    const avgSupply = avg(supplyList);
+    const avgDemand = avg(demandList);
 
     return {
       skill,
-      avgSupply: +avgSupply.toFixed(2),
-      avgDemand: +avgDemand.toFixed(2),
-      gap: +(avgDemand - avgSupply).toFixed(2),
+      students: supplyList.length,
+      challenges: demandList.length,
+      avgSupply: +avgSupply.toFixed(1),
+      avgDemand: +avgDemand.toFixed(1),
+      gap: +(avgDemand - avgSupply).toFixed(1),
     };
   }).sort((a, b) => b.gap - a.gap); // biggest gap first
 }
