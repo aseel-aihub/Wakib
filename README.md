@@ -1,6 +1,6 @@
 # Wakib | واكِب
 
-**Author / المؤلفة: Aseel** — © 2026 Aseel. All rights reserved. See [LICENSE](LICENSE).
+**Author / Aseel** — © 2026 Aseel. All rights reserved. See [LICENSE](LICENSE).
 
 A prototype platform that links graduation projects (capstones) to real industry challenges
 
@@ -32,7 +32,6 @@ A prototype platform that links graduation projects (capstones) to real industry
 
 - Brand colors taken from the Wakib logo (dark green + light green)
 - Two themes: **dark** and **light**, switched with the moon/sun button. The choice is saved; the first visit follows the device setting
-- الألوان مأخوذة من شعار واكِب، مع وضعين: داكن وفاتح
 
 ## Security 
 
