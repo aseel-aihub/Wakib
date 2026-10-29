@@ -4,7 +4,7 @@
 
 A prototype platform that links graduation projects (capstones) to real industry challenges
 
-منصة تربط مشاريع التخرج بتحديات حقيقية من الشركات: تحسب توافق مهارات الطالب مع التحدي، وتكوّن فريق متوازن، وتشترط اعتماد المشرف الأكاديمي ومرشد الشركة قبل بدء المشروع.
+منصة تربط مشاريع الطلاب بتحديات حقيقية من الشركات: تحسب توافق مهارات الطالب مع التحدي، وتكوّن فريق متوازن، وتشترط اعتماد المشرف الأكاديمي ومرشد الشركة قبل بدء المشروع.
 
 > All companies, students and challenges in this prototype are **fictional** demo data. No real company or partnership is represented.
 > 
